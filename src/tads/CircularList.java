@@ -14,6 +14,7 @@ public class CircularList {
   public void insert(Soldier soldier) {
     Node newNode = new Node(soldier, null);
     if (head == null) {
+      head = newNode;
       newNode.next = newNode;
     } else {
       tail.next = newNode;
@@ -23,21 +24,18 @@ public class CircularList {
   }
 
   public void deleteByNRounds(int nRounds){
-
-
     int totalElements = getTotalElements();
-    int lastSoldierPosition = 0;
-    Node movil= head;
+    Node movil = head;
     while(totalElements != 1 ){
-      for(int i = 0; i < nRounds; i++){
+      for(int i = 1; i < nRounds; i++){
           movil = movil.next;
       }
       Node toDelete = movil;
       deleteByName(toDelete.soldier.name);
       movil = movil.next;
-
       totalElements = getTotalElements();
     }
+    System.out.println("El soldado ganador es: " + head.soldier.name);
   }
 
   public Node getByPosition(int position){
@@ -65,20 +63,25 @@ public class CircularList {
     while(!end){
       if(movil.next.soldier.name.equals(soldierName)){
         Node toDelete = movil.next;
-        System.out.println("deleting " + toDelete.next.soldier.name);
+        System.out.println("Eliminando al soldado: " + toDelete.soldier.name);
         if(toDelete == tail){
           movil.next = head;
           tail = movil;
-        }else{
+          toDelete = null;
+        }else if(toDelete == head){
+          head = head.next;
+          tail.next = head;
+          toDelete = null;
+        }
+        else{
           movil.next = toDelete.next;
-          movil = null;
+          toDelete = null;
         }
         break;
       }
       if(movil == tail){
         end = true;
       }
-      count++;
       movil = movil.next;
     }
   }
@@ -92,10 +95,19 @@ public class CircularList {
         end=true;
       }
       count++;
+      movil = movil.next;
     }
     return count;
   }
-  public void deleteNode(Node node){
-
+  public void printList(){
+    Node aux = head;
+    boolean end = false;
+    while(!end){
+      System.out.println(aux.soldier.name);
+      if(aux == tail){
+        end = true;
+      }
+      aux = aux.next;
+    }
   }
 }
